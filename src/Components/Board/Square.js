@@ -1,6 +1,5 @@
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from 'react-dnd-html5-backend'
 import { Unit } from "../Unit";
+import { useDrop } from "react-dnd";
 
 /**
  * Represents a square on the game board.
@@ -9,6 +8,16 @@ import { Unit } from "../Unit";
  * @returns 
  */
 const Square = (props) => {
+
+    const [{ isOver }, dropRef] = useDrop({
+        accept: 'unit',
+        drop: (item) => {
+            props.cbf(item)
+        },
+        collect: (monitor) => ({
+            isOver: monitor.isOver()
+        })
+    })
 
     return (
         <div style={{
@@ -19,12 +28,11 @@ const Square = (props) => {
             backgroundSize: "100%, 100%",
             display: "flex",
             placeContent: "center"
-        }} >
-        {props.unit 
-            ? <DndProvider backend={HTML5Backend}>
-                <Unit id={props.unit.id} name={props.unit.name} img={props.unit.img} />
-            </DndProvider>
-            : props.children}
+        }} ref={dropRef}>
+            {props.unit
+                ?
+                <Unit id={props.unit.id} row={props.unit.row} col={props.unit.col} img={props.unit.img} />
+                : !isOver && props.children}
         </div>
     )
 }
