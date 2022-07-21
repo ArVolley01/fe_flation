@@ -11,6 +11,9 @@ class GameBoard extends React.Component{
         this.state.board = new Board({rows: this.state.rows, cols: this.state.cols})
     }
 
+    changeUnit(row, col, unit) {
+        this.state.board.changeUnit(row, col, unit)
+    }
 
     render() {
         return this.state.board.render()
